@@ -181,3 +181,57 @@ export const deleteUser = async (req, res) => {
     return res.status(500).json(err);
   }
 };
+
+export const followUser = async (req, res) => {
+  try {
+    //Get the followed user
+    const followedUser = await User.findById(req.params.id);
+
+    //Get the current user
+    const currentUser = await User.findById(req.body.userId);
+
+    //Check if you follow the user or not
+    if (followedUser.followers.includes(req.body.userId)) {
+      return res.status(400).json({ err: "You already follow this user!" });
+    }
+
+    //Update the followers field
+    await followedUser.updateOne({ $push: { followers: req.body.userId } });
+
+    //Update the following field
+    await currentUser.updateOne({ $push: { following: req.params.id } });
+
+    //Return successfull message
+    return res.status(200).json({ msg: "Followed Successfully!" });
+  } catch (err) {
+    //Return server error
+    return res.status(500).json(err);
+  }
+};
+
+export const unfollowUser = async (req, res) => {
+  try {
+    //Get the unfollowed user
+    const unfollowedUser = await User.findById(req.params.id);
+
+    //Get the current user
+    const currentUser = await User.findById(req.body.userId);
+
+    //Check if you follow the user or not
+    if (!unfollowedUser.followers.includes(req.body.userId)) {
+      return res.status(400).json({ err: "You already unfollow this user!" });
+    }
+
+    //Update the followers field
+    await unfollowedUser.updateOne({ $pull: { followers: req.body.userId } });
+
+    //Update the following field
+    await currentUser.updateOne({ $pull: { following: req.params.id } });
+
+    //Return successfull message
+    return res.status(200).json({ msg: "Unfollowed Successfully!" });
+  } catch (err) {
+    //Return server error
+    return res.status(500).json(err);
+  }
+};

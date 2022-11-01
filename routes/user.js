@@ -6,6 +6,8 @@ import {
   login,
   updateUser,
   deleteUser,
+  followUser,
+  unfollowUser,
 } from "../controllers/user.js";
 import { verifyToken } from "../middlewares/verifyToken.js";
 
@@ -13,7 +15,7 @@ import { verifyToken } from "../middlewares/verifyToken.js";
 const router = express.Router();
 
 //get users route
-router.get("/", getUsers);
+router.get("/", verifyToken, getUsers);
 
 //get user route
 router.get("/:id", getUser);
@@ -26,6 +28,12 @@ router.post("/login", login);
 
 //Update user
 router.put("/:id", verifyToken, updateUser);
+
+//Follow user
+router.put("/follow/:id", followUser);
+
+//Unfollow user
+router.put("/unfollow/:id", unfollowUser);
 
 //Delete user
 router.delete("/:id", verifyToken, deleteUser);

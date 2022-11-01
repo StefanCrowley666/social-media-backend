@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 import userRoute from "./routes/user.js";
+import postRoute from "./routes/post.js";
 
 //App configuration
 dotenv.config();
@@ -17,6 +18,7 @@ app.use(cors());
 
 //App middlewares
 app.use("/api/users", userRoute);
+app.use("/api/posts", postRoute);
 
 //Root page middleware
 app.get("/", (req, res) => {
